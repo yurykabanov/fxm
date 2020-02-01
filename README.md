@@ -57,13 +57,11 @@ func main() {
     app := fx.New(
         // ...
 
-        fx.Provide(
-            // Enable default config provider
-            viperfx.DefaultConfigProvider,         
+        // Enable default config provider
+        viperfx.DefaultConfigProvider,         
                           
-            // Enable default loggers: *logrus.Logger, logrus.FieldLogger, log.Logger
-            viperfx.DefaultLoggers,
-        )
+        // Enable default loggers: *logrus.Logger, logrus.FieldLogger, log.Logger
+        viperfx.DefaultLoggers,
         
         // ...
     )
