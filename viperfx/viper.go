@@ -44,13 +44,17 @@ func WithIgnoreMissingConfig() Option {
 type ViperProvider func(flagSet *pflag.FlagSet) (*viper.Viper, error)
 
 func MakeViperProvider(opts ...Option) ViperProvider {
-	options := options{
+	options := &options{
 		EnvPrefix:          "",
 		DefaultConfigFile:  "config",
 		DefaultConfigPaths: []string{
 			".",
 			"./config",
 		},
+	}
+
+	for _, opt := range opts {
+		opt(options)
 	}
 
 	return func(flagSet *pflag.FlagSet) (*viper.Viper, error) {
