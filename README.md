@@ -45,6 +45,8 @@ func main() {
 
 ## `logrusfx`
 
+Depends on `*viper.Viper`.
+
 Usage:
 
 ```go    
@@ -58,10 +60,10 @@ func main() {
         // ...
 
         // Enable default config provider
-        viperfx.DefaultConfigProvider,         
+        viperfx.DefaultConfigProviderOption,
                           
         // Enable default loggers: *logrus.Logger, logrus.FieldLogger, log.Logger
-        viperfx.DefaultLoggers,
+        viperfx.DefaultLoggersOption,
         
         // ...
     )
