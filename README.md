@@ -71,3 +71,37 @@ func main() {
     app.Run()
 }
 ```
+
+## `jaegertracingfx`
+
+You should consider writing your own config provider as the default one may not
+suit very well or could require a lot of environment variables.
+
+Usage:
+
+```go      
+import (
+    "github.com/yurykabanov/fxm/jaegertracingfx"
+    "go.uber.org/fx"
+)
+                       
+func main() {
+    app := fx.New(
+        // ...
+
+        // Enable default config provider
+        // It will use very basic config and will parse jaeger's env variables
+        jaegertracingfx.DefaultJaegerConfigurationProviderOption,
+                          
+        // Register Jaeger tracer and a stop-hook
+        jaegertracingfx.JaegerTracerOption,
+                                                 
+        // Register Jaeger tracer as global tracer
+        jaegertracingfx.RegisterTracerAsGlobalOption,
+
+        // ...
+    )
+
+    app.Run()
+}
+```
