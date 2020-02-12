@@ -108,7 +108,7 @@ func main() {
 
 ## `httpfx`
 
-Depends on `*viper.Viper`.
+Depends on `*viper.Viper` and standard `*log.Logger`.
 
 ```go
 import (

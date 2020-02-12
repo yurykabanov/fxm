@@ -1,6 +1,8 @@
 package httpfx
 
 import (
+	"errors"
+	"log"
 	"net/http"
 	"time"
 
@@ -13,23 +15,43 @@ type HttpServerConfig struct {
 	WriteTimeout time.Duration `mapstructure:"write_timeout"`
 }
 
-type HttpServerConfigProviderFunc func(v *viper.Viper) (*HttpServerConfig, error)
+type Option func(*HttpServerConfig)
 
-func MakeHttpServerConfigProvider(rootKey string) HttpServerConfigProviderFunc {
+func WithDefault(defaultConfig *HttpServerConfig) Option {
+	return func(config *HttpServerConfig) {
+		*config = *defaultConfig
+	}
+}
+
+type HttpServerConfigProviderFunc func(*viper.Viper) (*HttpServerConfig, error)
+
+func MakeHttpServerConfigProvider(rootKey string, opts ...Option) HttpServerConfigProviderFunc {
 	return func(v *viper.Viper) (*HttpServerConfig, error) {
-		config := HttpServerConfig{}
+		config := &HttpServerConfig{
+			ReadTimeout:  30 * time.Second,
+			WriteTimeout: 30 * time.Second,
+		}
 
-		err := v.UnmarshalKey(rootKey, &config)
+		for _, opt := range opts {
+			opt(config)
+		}
+
+		err := v.UnmarshalKey(rootKey, config)
 		if err != nil {
 			return nil, err
 		}
 
-		return &config, nil
+		if config.Addr == "" {
+			return nil, errors.New("empty address is invalid")
+		}
+
+		return config, nil
 	}
 }
 
-func HttpServerProvider(config *HttpServerConfig) *http.Server {
+func HttpServerProvider(config *HttpServerConfig, logger *log.Logger) *http.Server {
 	return &http.Server{
+		ErrorLog:     logger,
 		Addr:         config.Addr,
 		ReadTimeout:  config.ReadTimeout,
 		WriteTimeout: config.WriteTimeout,
