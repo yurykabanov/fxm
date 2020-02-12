@@ -5,23 +5,26 @@ import (
 	"github.com/spf13/viper"
 )
 
-const (
-	ConfigLogLevel  = "log.level"
-	ConfigLogFormat = "log.format"
-)
-
 type Config struct {
-	Level  string
-	Format string
+	Level  string `mapstructure:"level"`
+	Format string `mapstructure:"format"`
 }
 
-func LoggerConfigProvider(v *viper.Viper) *Config {
-	v.SetDefault(ConfigLogLevel, "info")
-	v.SetDefault(ConfigLogFormat, "text")
+type LoggerConfigProviderFunc func (v *viper.Viper) (*Config, error)
 
-	return &Config{
-		Level:  v.GetString(ConfigLogLevel),
-		Format: v.GetString(ConfigLogFormat),
+func MakeLoggerConfigProvider(rootKey string) LoggerConfigProviderFunc {
+	return func (v *viper.Viper) (*Config, error) {
+		config := &Config{
+			Level:  "info",
+			Format: "text",
+		}
+
+		err := v.UnmarshalKey(rootKey, config)
+		if err != nil {
+			return nil, err
+		}
+
+		return config, nil
 	}
 }
 

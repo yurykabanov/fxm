@@ -59,8 +59,8 @@ func main() {
     app := fx.New(
         // ...
 
-        // Enable default config provider
-        viperfx.DefaultConfigProviderOption,
+        // Enable config provider, that will consume `log.level` and `log.format`
+        fx.Provide(MakeLoggerConfigProvider("log"))
                           
         // Enable default loggers: *logrus.Logger, logrus.FieldLogger, log.Logger
         viperfx.DefaultLoggersOption,

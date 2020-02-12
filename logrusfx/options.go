@@ -5,6 +5,5 @@ import (
 )
 
 var (
-	DefaultConfigProviderOption = fx.Provide(LoggerConfigProvider)
-	DefaultLoggersOption        = fx.Provide(LogrusLogger, LogrusFieldLogger, DefaultLoggerAdapter)
+	DefaultLoggersOption = fx.Provide(LogrusLogger, LogrusFieldLogger, DefaultLoggerAdapter)
 )
