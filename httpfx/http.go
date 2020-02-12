@@ -23,6 +23,12 @@ func WithDefault(defaultConfig *HttpServerConfig) Option {
 	}
 }
 
+func WithDefaultAddr(addr string) Option {
+	return func(config *HttpServerConfig) {
+		config.Addr = addr
+	}
+}
+
 type HttpServerConfigProviderFunc func(*viper.Viper) (*HttpServerConfig, error)
 
 func MakeHttpServerConfigProvider(rootKey string, opts ...Option) HttpServerConfigProviderFunc {
