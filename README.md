@@ -105,3 +105,32 @@ func main() {
     app.Run()
 }
 ```
+
+## `httpfx`
+
+Depends on `*viper.Viper`.
+
+```go
+import (
+    "github.com/yurykabanov/fxm/httpfx"
+    "go.uber.org/fx"
+)
+
+func main() {
+    app := fx.New(
+        // ...
+
+        // Enable default config provider
+        // It will load config varialbes:
+        // http.addr, http.read_timeout, http.write_timeout
+        fx.Provide(httpfx.MakeHttpServerConfigProvider("http")),
+
+        // Register `http.Server`
+        fx.Provide(httpfx.HttpServerProvider),
+
+        // ...
+    )
+
+    app.Run()
+}
+```
